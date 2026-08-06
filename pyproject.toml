@@ -53,7 +53,8 @@ ignore = [
     "E402", # module level import not at top of file
     "E501", # line too long
     "E741", # ambiguous variable name
-    "F401", # "unused" imports
+    # F401 (unused imports) is intentionally NOT ignored — enforcing it keeps dead
+    # imports out and backs the dead-code sweep (PRs 2/3).
     "F403", # can't detect undefined names from * import
     "F405", # can't detect undefined names from * import
     "F722", # syntax error in forward type annotation

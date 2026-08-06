@@ -11,7 +11,7 @@ Invoice Type filter so the register reflects real billing.
 
 import frappe
 from frappe import _
-from frappe.utils import flt, getdate
+from frappe.utils import flt
 
 from central.billing.report._currency import split_currency_columns
 

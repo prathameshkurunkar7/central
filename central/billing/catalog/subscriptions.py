@@ -21,7 +21,7 @@ import frappe
 # The account-standing state machine (which moves are legal) now lives in the one
 # transition authority; re-exported so callers that catch `subscriptions.InvalidTransition`
 # keep working. Suspension is still staged through Past Due (grace), never a direct jump.
-from central.billing.states import InvalidTransition, transition
+from central.billing.states import transition
 
 # The Subscription Change type that records a move *into* a standing.
 _STANDING_CHANGE_TYPE = {

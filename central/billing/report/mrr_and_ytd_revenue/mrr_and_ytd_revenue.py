@@ -12,7 +12,6 @@ Money is never summed across currencies — a team bills in one currency, and IN
 and USD each carry their own MRR/YTD line and their own trend line on the chart.
 """
 
-import frappe
 from frappe import _
 from frappe.utils import flt, getdate
 

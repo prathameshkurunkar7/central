@@ -16,7 +16,6 @@ Amounts are split per currency: INR and USD never share a column or a total
 (report/_currency.split_currency_columns).
 """
 
-import frappe
 from frappe import _
 
 from central.billing.platform import invariants

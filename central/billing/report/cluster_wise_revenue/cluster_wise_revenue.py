@@ -12,7 +12,6 @@ cluster's slice of its own currency's total, so the percentages add to 100 withi
 currency.
 """
 
-import frappe
 from frappe import _
 from frappe.utils import flt
 
