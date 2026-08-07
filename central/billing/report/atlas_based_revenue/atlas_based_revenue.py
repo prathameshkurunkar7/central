@@ -14,7 +14,6 @@ Atlas instance's slice of its own currency's total, so the percentages add to 10
 within a currency.
 """
 
-import frappe
 from frappe import _
 from frappe.utils import flt
 

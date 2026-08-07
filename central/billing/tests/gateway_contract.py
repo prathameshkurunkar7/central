@@ -7,8 +7,6 @@ in alongside IntegrationTestCase and implements the SDK-stub hooks. This file
 has no `test_` prefix so the runner never executes it standalone.
 """
 
-import frappe
-
 
 class GatewayAdapterContract:
 	# --- hooks the concrete adapter test must provide -----------------------

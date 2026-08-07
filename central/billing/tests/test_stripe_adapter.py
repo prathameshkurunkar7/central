@@ -109,8 +109,6 @@ class TestStripeAdapter(GatewayAdapterContract, IntegrationTestCase):
 		return payload, {}, "evt_123", "payment_intent.succeeded"
 
 	def setup_inputs(self):
-		import frappe
-
 		return "Team-1", {"customer_id": "cus_test"}
 
 	@contextmanager

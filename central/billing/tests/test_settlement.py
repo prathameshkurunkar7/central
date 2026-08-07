@@ -9,7 +9,6 @@ import frappe
 
 from central.billing.catalog import subscriptions
 from central.billing.gateways.base import PaymentResult
-from central.billing.payments import settlement
 from central.billing.payments.settlement import (
 	can_accept_spend,
 	credit_forecast,
