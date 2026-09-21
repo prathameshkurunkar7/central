@@ -36,4 +36,4 @@ The earlier [execution plan](EXECUTION_PLAN.md) does not define the v0.2 deliver
 
 - [Billing documentation](../central/billing/docs/README.md): billing domain rules.
 
-The rewrite preserves billing domain logic. Required resource references and integration changes carry their own tests and data patches.
+The rewrite preserves billing domain logic. Required resource references and integration changes carry their own tests.

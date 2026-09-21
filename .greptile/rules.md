@@ -55,7 +55,7 @@ Central scopes access by Team capability. A user holds a role in a Team, the rol
 - Flag a new capability string used at a call site that is absent from `CAPABILITIES.md` and the fixtures.
 - Flag a new or changed permission rule with no test in `central/tests/`, including the denial case.
 - Flag a whitelisted API method without type annotations.
-- Flag `frappe.get_all` in a read that runs on behalf of a signed-in user and returns team-owned records, where `frappe.get_list` would apply the query conditions. This rule does not apply to `central/iam.py`, `central/permissions.py`, a patch, a scheduled task, a background job, the integration layer, demo or developer setup, or a test. Those run as the system, and the permission layer itself must not call back into permissions.
+- Flag `frappe.get_all` in a read that runs on behalf of a signed-in user and returns team-owned records, where `frappe.get_list` would apply the query conditions. This rule does not apply to `central/iam.py`, `central/permissions.py`, a scheduled task, a background job, the integration layer, demo or developer setup, or a test. Those run as the system, and the permission layer itself must not call back into permissions.
 - Flag a new DocType that stores per-team records and has no indexed `team` link field. Do not apply this to a Single, a system or catalog DocType such as Capability or Region, or a child table scoped through its parent.
 
 ## Python
@@ -67,8 +67,8 @@ Central scopes access by Team capability. A user holds a role in a Team, the rol
 - Flag a resource or server action that fails without the error envelope in `central/errors.py`. An internal guard or a validation `frappe.throw` does not need the envelope.
 - Flag raw SQL where `frappe.db` or `frappe.qb` is sufficient.
 - Flag a read that joins more than 2 tables without `frappe.qb`, and a query issued once per row of a loop. A `frappe.get_cached_value` or `get_cached_doc` lookup in a loop is acceptable.
-- Flag an index or unique constraint added in a patch. It belongs in the controller's `on_doctype_update`.
-- Flag a change to existing data or a field rename that needs a patch in `central/patches/` and does not add one. A new nullable field needs no patch.
+- Flag an index or unique constraint added anywhere but the controller's `on_doctype_update`.
+- Flag a migration patch of any kind (`central/patches.txt`, `central/patches/`). Central is pre-1.0 with no site to migrate — see `MIGRATION.md`. A schema or data change needs no patch, ever, until Central is live.
 - Flag custom machinery where a standard Frappe API, an existing repository helper, or a built-in DocType is sufficient.
 - Flag mutable global state, circular imports, and a lazy re-export in a package `__init__.py`.
 - Flag state with more than one owner, and temporary state that leaks outside its object or module.

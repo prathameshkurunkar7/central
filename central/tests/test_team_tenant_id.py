@@ -10,7 +10,6 @@ from central.central.doctype.team.tenant import (
 	prepare_tenant_id_series,
 	validate_tenant_id,
 )
-from central.patches.v0_0 import backfill_team_tenant_ids
 
 
 class TestTeamTenantId(IntegrationTestCase):
@@ -120,35 +119,3 @@ class TestTeamTenantId(IntegrationTestCase):
 			return value
 		finally:
 			frappe.destroy()
-
-	def test_patch_preserves_mappings_and_is_repeatable(self):
-		preserved = self.make_team()
-		missing = self.make_team()
-		frappe.db.set_value("Team", missing.name, "tenant_id", 0)
-		rows = [
-			frappe._dict(name=preserved.name, tenant_id=preserved.tenant_id),
-			frappe._dict(name=missing.name, tenant_id=0),
-		]
-		with (
-			patch.object(backfill_team_tenant_ids.frappe, "get_all", return_value=rows),
-			patch.object(backfill_team_tenant_ids, "validate_unassigned_teams"),
-		):
-			backfill_team_tenant_ids.execute()
-			rows[1].tenant_id = frappe.db.get_value("Team", missing.name, "tenant_id")
-			backfill_team_tenant_ids.execute()
-		self.assertEqual(frappe.db.get_value("Team", preserved.name, "tenant_id"), preserved.tenant_id)
-		self.assertGreater(rows[1].tenant_id, preserved.tenant_id)
-		self.assertEqual(frappe.db.get_value("Team", missing.name, "tenant_id"), rows[1].tenant_id)
-
-	def test_patch_refuses_duplicate_preserved_mappings(self):
-		rows = [frappe._dict(name=name, tenant_id=7) for name in ("first", "second")]
-		with self.assertRaises(frappe.ValidationError):
-			backfill_team_tenant_ids.validate_existing_mappings(rows)
-
-	def test_patch_refuses_to_guess_existing_resource_ownership(self):
-		resource = frappe._dict(name="remote-vm", team="existing-team")
-		with (
-			patch.object(backfill_team_tenant_ids.frappe, "get_all", return_value=[resource]),
-			self.assertRaises(frappe.ValidationError),
-		):
-			backfill_team_tenant_ids.validate_unassigned_teams([resource.team])

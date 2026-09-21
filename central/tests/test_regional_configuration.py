@@ -7,7 +7,6 @@ from frappe.tests import IntegrationTestCase
 
 from central.errors import AtlasConnectionError
 from central.integrations.atlas import AtlasClient
-from central.patches.v0_0.reset_atlas_connection_checks import execute as reset_connection_checks
 from central.sso import central_url
 
 
@@ -96,15 +95,6 @@ class TestRegionalConfiguration(IntegrationTestCase):
 		self.instance.reload()
 		self.assertFalse(self.instance.connection_error)
 
-	def test_migration_does_not_invent_region_id_or_keep_old_ping(self):
-		self.instance.db_set({"reachable": 1, "atlas_region_id": None, "connection_checked_at": None})
-		reset_connection_checks()
-		reset_connection_checks()
-
-		self.instance.reload()
-		self.assertFalse(self.instance.reachable)
-		self.assertIsNone(self.instance.atlas_region_id)
-
 	def test_customer_cannot_check_global_configuration_or_use_another_team(self):
 		user = frappe.get_doc(
 			{
@@ -176,12 +166,6 @@ class TestRegionalConfiguration(IntegrationTestCase):
 					"atlas_region_id": "00042",
 				}
 			).insert()
-
-	def test_migration_preserves_a_completed_signed_check(self):
-		self.instance.test_connection()
-		reset_connection_checks()
-
-		self.assertTrue(self.instance.reload().reachable)
 
 	def test_enroll_atlas_mints_and_sends_a_secret_the_first_time(self):
 		self.request.return_value = self.response({"central_id": 1, "enabled": True, "webhooks": []})

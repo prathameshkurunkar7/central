@@ -5,9 +5,9 @@ import frappe
 import requests
 from frappe.tests import IntegrationTestCase
 
+from central.central.doctype.image_offering.image_offering import ensure_default_offerings
 from central.errors import AtlasConnectionError
 from central.integrations.images import list_images, list_offerings
-from central.patches.v0_0.seed_image_offerings import execute as seed_offerings
 
 
 class TestImageOfferings(IntegrationTestCase):
@@ -150,9 +150,9 @@ class TestImageOfferings(IntegrationTestCase):
 			self.offering.save()
 
 	def test_seed_is_idempotent_and_preserves_operator_changes(self):
-		seed_offerings()
+		ensure_default_offerings()
 		frappe.db.set_value("Image Offering", "pilot", {"title": "Our Pilot", "enabled": 0})
-		seed_offerings()
+		ensure_default_offerings()
 		self.assertEqual(
 			frappe.db.get_value("Image Offering", "pilot", ["title", "enabled"]), ("Our Pilot", 0)
 		)

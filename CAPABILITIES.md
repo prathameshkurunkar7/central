@@ -123,11 +123,13 @@ renaming a capability is a coordinated change, not a casual one:
    run `bench export-fixtures --app central` to regenerate them from the DB.
 2. Bump `CAPABILITY_VERSION` in `central/iam.py` (stamped into the SSO assertion so
    a bench can detect drift from its `BENCH_CAPS` mirror).
-3. Add a migration patch to delete removed records — fixture sync only upserts, it
-   never deletes (see `central/patches/v03_strip_to_server_caps`).
-4. Update the `bench`-plane mirror (`BENCH_CAPS` and the route→capability map in
+3. Update the `bench`-plane mirror (`BENCH_CAPS` and the route→capability map in
    `admin/backend/auth.py`) if a `bench`-plane capability changed.
-5. Update this document.
+4. Update this document.
+
+Central has no deployed site to carry a removed capability's stale rows, and writes no
+migration patch for one — see `MIGRATION.md`. Fixture sync only upserts, never
+deletes, so a removed record just never exists on a fresh site.
 
 **Never rename a capability in place.** An already-deployed bench keeps checking
 the old string and will authorize the wrong thing, silently. Add the new

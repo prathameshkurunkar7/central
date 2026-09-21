@@ -153,7 +153,7 @@ Acceptance:
 - Replay duplicate and older signed events and verify no repeated effects.
 - Verify two Teams cannot read, mutate, or access each other's resources.
 - Run focused tests, affected billing tests, dashboard checks, and the required build.
-- Rehearse changed data patches on representative staging data.
+- Confirm the fresh-install guide in [MIGRATION.md](../MIGRATION.md) works end to end on staging.
 - Record dependency revisions, results, remaining defects, and operator recovery steps.
 
 A VM running event, a green unit test, or a successful API response alone does not satisfy this gate.
@@ -205,10 +205,10 @@ Pilot has now landed the two pieces this needed on its side: a session token bou
 
 **Result:** the records are named and shaped the way the product talks about them.
 
-Do this as separate PRs, each with its patch, and after items 1 and 4 land.
+Do this as separate PRs, and after items 1 and 4 land.
 
-- Renamed `Asset` to `Virtual Machine` — done, via `frappe.rename_doc` and a patch. `cluster` stays the field name for now — renaming it to `region` would touch the doctype a second time right after this rename touched it once.
-- Merged `Atlas Instance` and `Cargo Instance` into `Region` — done. Every regional read is one record now, each service behind its own mixin (`atlas_connection.py`, `cargo_connection.py`) so the two stay separated in code and never share a field, and both merge patches carried existing connection data across losslessly.
+- Renamed `Asset` to `Virtual Machine` — done. `cluster` stays the field name for now — renaming it to `region` would touch the doctype a second time right after this rename touched it once.
+- Merged `Atlas Instance` and `Cargo Instance` into `Region` — done. Every regional read is one record now, each service behind its own mixin (`atlas_connection.py`, `cargo_connection.py`) so the two stay separated in code and never share a field.
 - Link `Site` to its machine and hide a machine that carries a site. A trial customer owns a site, not a VM, and should not see both.
 - Split Central's doctypes out of the one flat `Central` module into `Identity`, `Provisioning` (Asset/Virtual Machine, Resource Action, Region, Image Offering, Site, Site Domain), `Credentials`, and a slimmer `Central`. This is what gives the Desk sidebar the same grouped navigation Atlas has, for free, via Frappe's own per-module tree — no custom sidebar code. Do this once the doctypes above reach their final names, so nothing moves folders twice. Add a Number Card dashboard to Central's own workspace at the same time (servers by status, sites, stuck Resource Actions, regions) — today it holds only IAM shortcuts.
 
@@ -216,7 +216,7 @@ Do this as separate PRs, each with its patch, and after items 1 and 4 land.
 
 - Resize must offer CPU and memory only. Remove the disk change from `resize_server`, the API, and the console.
 - Remove a terminated server's Site Domain routes, or refuse termination while a site still holds a route.
-- Delete `Central Tunnel Settings`, `Connect Credential`, and `Passport Registration`, with a patch each. Nothing reads them.
+- Delete `Central Tunnel Settings`, `Connect Credential`, and `Passport Registration`. Nothing reads them.
 - Increase the wildcard-domain suffix length allowed in New Site, and widen that dialog to fit it.
 - Confirm the Frappe `Asia/Calcutta` timezone fault and where it comes from.
 
@@ -228,7 +228,7 @@ Hold this until items 1 through 3 land: proving the journey before state deliver
 
 ## PR rules
 
-Each PR includes changed behavior, required patches, focused tests, matching UI changes, and current documentation.
+Each PR includes changed behavior, focused tests, matching UI changes, and current documentation.
 
 Keep remote calls in integrations and authorization in Central IAM. Enforce list and document permissions. Follow the Desk and error-handling rules in CLAUDE.md.
 
