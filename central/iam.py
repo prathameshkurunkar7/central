@@ -12,7 +12,7 @@ OPERATOR_BYPASS_ROLE = "System Manager"
 # Bumped whenever the capability taxonomy changes. Stamped into the SSO assertion
 # (`cap_version`) so a bench can detect drift from its own `BENCH_CAPS` mirror.
 # v3: server is the atomic unit — the bench plane (site:* + server:config) and the
-# redundant server:view are dropped; role capabilities live at team + server level
+# redundant asset:view are dropped; role capabilities live at team + server level
 # only. The plane field and the bench-caps SSO mint stay, so site caps can return
 # under the bench plane later with no contract change.
 CAPABILITY_VERSION = 4
