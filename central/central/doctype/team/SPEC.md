@@ -22,18 +22,13 @@ Existing Team permissions still apply to reads and writes. A tenant ID does not 
 
 ## Migration
 
-Pause Team creation and resource mutations during the migration. Run the registered `backfill_team_tenant_ids` patch after model sync.
-
-The patch checks preserved IDs for range and duplicates before assigning missing IDs. It retains Team names, memberships, and billing references.
-
-If an unassigned Team owns a non-terminated Asset or Site, the patch stops with a readable error. Verify regional ownership and restore the mapping before retrying. Do not infer ownership from a display name.
-
-The patch can run again without changing assigned IDs. It calls the controller schema hook to install the uniqueness constraint after the backfill.
-
-For a fresh installation, schema setup creates the empty series and the uniqueness constraint. No backfill is needed.
+Central is pre-1.0, with no site to carry a tenant ID forward. A fresh site (see
+[MIGRATION.md](../../../../MIGRATION.md)) creates the empty series and the uniqueness
+constraint at schema setup, and assigns every Team a tenant ID at insert time. There is
+nothing to backfill.
 
 ## Validation
 
-Run `central.tests.test_team_tenant_id` through Pilot. Tests cover caller input, immutability, database uniqueness, full-range storage, concurrent allocation, counter preservation, and migration checks.
+Run `central.tests.test_team_tenant_id` through Pilot. Tests cover caller input, immutability, database uniqueness, full-range storage, and concurrent allocation.
 
 Run the existing IAM tests to check that Team capability rules still apply. No capability or permission bypass is added by tenant allocation.

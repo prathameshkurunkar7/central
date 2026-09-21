@@ -179,7 +179,7 @@ both categories:
 
 - **Billing** (via `notifications.notify`): Payment Success/Failure, Card Expiry, Credit Low,
   Mandate Reauth, Pre-debit Notice — one representative event per team, matched to its scenario.
-- **Server**: Server Failed (a real `Asset` flipped to `Failed` fires the `on_update` hook),
+- **Server**: Server Failed (a real `Virtual Machine` flipped to `Failed` fires the `on_update` hook),
   Resize Failed and Cluster Degraded (via `create_notification`, the same writer the real hooks call).
 - The `overdue` team already emits Invoice Overdue + Server Suspended through real dunning.
 

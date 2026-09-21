@@ -152,7 +152,7 @@ bench --site central.local execute central.billing.catalog.subscriptions.provisi
   --kwargs '{"team":"<TEAM>","cluster":"in-mumbai","plan":"plan-2vcpu","billing_cycle":"Monthly"}'
 ```
 Creates the **Subscription** (intent) + first **Subscription Change** row carrying the
-`locked_rate`, and provisions the Asset via cluster-manager. Composed configs:
+`locked_rate`, and provisions the Virtual Machine via cluster-manager. Composed configs:
 `provision_composed_subscription(team, cluster, includes, sub_category, …)` or the UI
 `api/dashboard/catalog.provision_composed_config`.
 

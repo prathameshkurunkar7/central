@@ -26,9 +26,9 @@ Follow `next_offset` until it is null. A page can contain no available images an
 
 The operator's **Preview Regional Images** action uses the saved selector and system tenant. It supports subsequent pages. It creates no remote resources.
 
-## Installation and migration
+## Installation
 
-`ensure_default_offerings` creates missing Pilot and Ubuntu records on installation. The `seed_image_offerings` patch runs the same function on existing sites. Repeated execution preserves operator edits, including disabled offerings.
+`ensure_default_offerings` creates missing Pilot and Ubuntu records on installation. Repeated execution preserves operator edits, including disabled offerings.
 
 ## Dependencies
 

@@ -14,7 +14,7 @@ left so it can be picked up cleanly. See also `spec/ATLAS_COORDINATION.md`.
 - **Merge `Service API Key` + `Site Service Credential`** into one DocType with a
   `subject_type` discriminator — deletes a table, a controller, a TS type, and the dual loop
   in `services/llm.py`. **Needs a data migration.** If not worth it, record why.
-- **Naming pass:** one noun for Asset/Server/VM, cluster vs region, `Order.desc` vs
+- **Naming pass:** one noun for Server/VM (`Asset` is renamed; the console still says "server" where the Desk says "Virtual Machine"), cluster vs region, `Order.desc` vs
   `frappe.qb.desc`; wrap the remaining bare `frappe.throw` strings in `_()`.
 
 ## PR 7 — frontend consolidation

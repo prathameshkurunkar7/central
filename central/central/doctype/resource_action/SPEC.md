@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Resource Action owns the durable intent and outcome of server creation, start, stop, and termination. Asset is the server record, and its observed fields hold the last state a region reported. An action is not proof of the server's current state.
+Resource Action owns the durable intent and outcome of server creation, start, stop, and termination. Virtual Machine is the server record, and its observed fields hold the last state a region reported. An action is not proof of the server's current state.
 
 ```text
 Customer -> authorized service -> Resource Action -> queued integration worker
@@ -11,7 +11,7 @@ Customer -> authorized service -> Resource Action -> queued integration worker
                                       |                      |
                                 accepted quote       regional VM identity
                                       |                      |
-                                 Subscription <--- Asset record
+                                 Subscription <--- Virtual Machine record
 ```
 
 ## Request contract

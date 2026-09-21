@@ -87,7 +87,7 @@ erDiagram
     PlanConfigurator ||--o{ Plan : generates
 
     Subscription ||--o{ SubscriptionChange : "append-only history (locked_rate)"
-    Subscription ||--o| Asset : provisions
+    Subscription ||--o| VirtualMachine : provisions
     Project ||--o{ Subscription : "tags (optional)"
 
     Invoice ||--o{ InvoiceLineItem : contains
@@ -119,7 +119,7 @@ Plan Configurator ─→ Category, Sub-Category, [C]base_rates, [C]rungs(─→P
 **Subscription / state**
 ```
 Subscription ──team, ──plan, ──sub_category, ──includes, ──default_payment_method,
-             ──gateway, ──asset_id─→ Asset, ──project─→ Project
+             ──gateway, ──server_id─→ VirtualMachine, ──project─→ Project
 Subscription Change ──subscription, ──team, ──currency      (append-only history + locked_rate)
 Price Lock ──team, ──plan                                    (RETIRED — see §6; rate now lives on Subscription Change)
 Project ──team, ──title, ──enabled, ──spending_limit          (cost-tag + run-rate cap; see §2.1)
@@ -244,7 +244,7 @@ flowchart LR
 | daily | `payments.reconciliation.run_reconciliation` | charged-but-never-webhooked gateway scan |
 | daily | `payments.charges.cleanup_payment_logs` | prune Payment Attempt / Webhook Event |
 | daily | `payments.emandate.run_emandate_cycle` | INR ≤₹15k pre-debit notice → debit after 24h |
-| daily | `catalog.subscriptions.backfill_missing_subscriptions` | Subscription for any Running Asset missing one |
+| daily | `catalog.subscriptions.backfill_missing_subscriptions` | Subscription for any Running VirtualMachine missing one |
 | hourly | `revenue.erpnext_sync.retry_failed_syncs` | retry Sales Invoice push (backoff window elapsed) |
 | monthly | `payments.payments.expire_payment_methods` | flip cards past their printed month |
 | cron `0 1 1 * *` | `revenue.invoicing.draft_monthly_invoices` | phase 1 — hand the month's teams out as page jobs |
@@ -378,8 +378,8 @@ sequenceDiagram
     API->>PRICE: resolve_config_rate (region×currency)
     API->>SUB: provision_composed_subscription
     SUB->>SUB: create Subscription + Subscription Change (locked_rate)
-    SUB->>CM: provision Asset
-    CM-->>SUB: asset_id
+    SUB->>CM: provision VirtualMachine
+    CM-->>SUB: server_id
     SUB-->>UI: subscription
 ```
 ```
@@ -388,7 +388,7 @@ api/dashboard/catalog.provision_composed_config
   → catalog.pricing.resolve_config_rate             (region × currency component rate card)
   → catalog.subscriptions.provision_composed_subscription
       → creates Subscription (intent) + Subscription Change row (carries locked_rate)
-      → cluster-manager API provisions the Asset
+      → cluster-manager API provisions the VirtualMachine
 ```
 Resize: `resize_composed_config → resize_composed_subscription` → new Subscription Change (re-prices).
 
@@ -484,7 +484,7 @@ stateDiagram-v2
     Day7 --> Current: paid
     PastDue --> Current: paid
     note right of Suspended
-        Asset keeps running until the
+        The VirtualMachine keeps running until the
         issued Entitlement Token expires
     end note
 ```
@@ -615,7 +615,7 @@ get_team_caps resolves caps live (no per-team Trust Tier doctype — dropped)
 
 - **Tests** live in `tests/` (one `test_<area>.py` per concern) — the fastest way to learn a
   flow is to read its test. `tests/utils.py` (`ensure_team`) + `tests/e2e.py`.
-- **Migrations** in `patches/` are `vNN_*` ordered; the most recent shape the catalog
-  taxonomy (`v15`–`v24`), trust-tier currency (`v12`/`v13`), gateway customer (`v10`/`v11`),
-  and team Link migration (`v03`). Check here when a field "moved" or "disappeared".
+- **Migrations**: Central is pre-1.0 and writes no migration patch — see `MIGRATION.md`.
+  A field that "moved" or "disappeared" only ever did so in a fresh schema; there is no
+  patch history to check.
 - **End-to-end Playwright** suite lives in the app root `e2e/billing/` (no-mock, real Stripe test).

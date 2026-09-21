@@ -90,14 +90,10 @@ field.
 
 ## Migration
 
-`reset_atlas_connection_checks` clears reachability values without an authenticated check
-timestamp. It does not guess numeric region IDs, rotate keys, or create remote resources.
-Repeating the patch preserves checks with a timestamp.
-
 Region absorbed the connection fields that used to live on the separate `Atlas Instance`
-doctype. `Asset.cluster`, `Resource Action.atlas_instance`, and the billing `cluster` Link
-fields all point at Region directly now; there is no second doctype to join through.
-`Cargo Instance` folded in the same way, into the `cargo_*` fields.
+doctype. `Virtual Machine.cluster`, `Resource Action.atlas_instance`, and the billing
+`cluster` Link fields all point at Region directly now; there is no second doctype to join
+through. `Cargo Instance` folded in the same way, into the `cargo_*` fields.
 
 ## Scope and validation
 
